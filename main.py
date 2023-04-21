@@ -1,6 +1,8 @@
+import pytz
 from fastapi import FastAPI
 from pymongo import MongoClient
 from dotenv import dotenv_values
+from datetime import timezone,timedelta,datetime
 import string
 import random
 from threading import Timer
@@ -14,7 +16,7 @@ from motor import motor_gridfs
 
 app = FastAPI()
 
-report_id
+
 client = MongoClient(config["MONGODB_CONNECTION_URI"])
 db = client.config["DB_NAME"]
 
@@ -49,25 +51,36 @@ def shutdown_db_client():
     app.mongodb_client.close()
 
 def get_data():
- client = MongoClient(config["MONGODB_CONNECTION_URI"])
- db = client.config["DB_NAME"]
+
  Menu_hour_sheet = db["TimeZone"]
 
- y = client[config["DB_NAME"]]['TimeZone'].find_one({'timezone_str':'Asia/Beirut'})
- return y
+ y = client[config["DB_NAME"]]['Menu_hours'].find_one({'day':1})
+ return y["store_id"]
 
-print(get_data())
-print(report_id)
+# print(get_data())
+def convert_timezone(x):
+ for y in client[config["DB_NAME"]]['TimeZone'].find({"store_id":x["store_id"]}):
+    tmz_info = y["timezone_str"]
+    local_tmz = pytz.timezone(y["timezone_str"])
+    time_str_start = + x["start_time_local"]
+    time_str_end = x["end_time_local"]
+    time_format = "%Y-%m-%d %H:%M:%S"
+    naive_start_time = datetime.strptime(time_str_start,time_format)
+    local_start_time = local_tmz.localize(naive_start_time,is_dst=None)
+    utc_start_time=local_start_time.astimezone(pytz.utc)
+    print(utc_start_time.strftime(time_format),x["start_time_local"] ,y["timezone_str"])
+ #  print(x)
+##TEST
+for x in client[config["DB_NAME"]]['Menu_hours'].find():
+ convert_timezone(x)
+ # for y in client[config["DB_NAME"]]['store_times'].find({'store_id': x['store_id']}):
+ #  time = y['timestamp_utc']
+ #  print(time)
 
-# @app.get("/trigger_report")
-# async def returnId(id: int):
-#     return {}:
-# client = motor.motor_asyncio.AsyncIOMotorClient(os.environ["mongodb+srv://user:user@testdb.lz5fe4t.mongodb.net/TestDB"])
-# db = client.LoopDB
-# for item in db.collection1.find():
-#     _id = item['_id']
-#     item2 = db.collection2.find({'_id':_id})
-#     print "{}: {}, {}: {}, diff: {}, a>b?:{}".format(
-#         item['name'], item['price'], item1['name'],
-#         item1['price'], item['price'] - item1['price'],
-#         item['price'] > item1['price'])
+  # if y['timestamp_utc']<=x['end_time_local'] and y['timestamp_utc']>=x['start_time_local']:
+  #  client[config["DB_NAME"]]["beacon"].insert_one({'store_id':y["store_id"],'time':y['timestamp_utc']})
+
+# print(report_id)
+
+##  Timezone conversion function ##
+
