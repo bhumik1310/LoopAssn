@@ -16,10 +16,10 @@ def create_tmz_object(date, time):
     utc_time = local_time.astimezone(pytz.utc)
     return utc_time
 
-for x in client["LoopDB"]['Menu_hours'].find({"day":0}):
+for x in client["LoopDB"]['Menu_hours'].find({"day":2},no_cursor_timeout=True):
  print("running")
- for y in client["LoopDB"]['store_times'].find({"store_id":x["store_id"]}):
-      Time_Zone =  client["LoopDB"]['TimeZone'].find_one({"store_id":x["store_id"]})
+ for y in client["LoopDB"]['store_times'].find({"store_id":x["store_id"]},no_cursor_timeout=True):
+      Time_Zone =  client["LoopDB"]['TimeZone'].find_one({"store_id":x["store_id"]},no_cursor_timeout=True)
 
       #Initialising Time-zone params
 
