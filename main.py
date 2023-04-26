@@ -1,4 +1,5 @@
 import pytz
+import pymongo
 from fastapi import FastAPI
 from pymongo import MongoClient
 from dotenv import dotenv_values
@@ -37,6 +38,8 @@ async def get_report_id():
  res = ''.join(random.choices(string.ascii_uppercase + string.digits, k=N))
  report_id =str(res)
  client[config["DB_NAME"]]["report_Ids"].insert_one({'report_id':report_id})
+
+
  return {"Report-ID":f"{report_id}"}
 @app.on_event("startup")
 def startup_db_client():
@@ -50,12 +53,43 @@ def startup_db_client():
 def shutdown_db_client():
     app.mongodb_client.close()
 
-def get_data():
 
- Menu_hour_sheet = db["TimeZone"]
+def create_tmz_object(date, time):
+    time_format = "%Y-%m-%d %H:%M:%S"
+    tmz_string = date + time
+    naive_time = datetime.strptime(tmz_string, time_format)
+    local_time = local_tmz.localize(naive_time, is_dst=None)
+    utc_time = local_time.astimezone(pytz.utc)
+    return utc_time
 
- y = client[config["DB_NAME"]]['Menu_hours'].find_one({'day':1})
- return y["store_id"]
+
+@app.get("/func")
+def hello():
+    i=0
+    while i!=100:
+        return {"running"+f"{i}"}
+        i= i+1
+    return {"done"}
+@app.get("/test")
+async def hello_program():
+    report = client[config["DB_NAME"]]['report_Ids'].find_one(
+        {},
+        sort=[('_id', pymongo.DESCENDING)]
+    )
+    report_id = report["report_id"]
+    return {"Report-ID": f"{report_id}"}
+
+
+
+##Creating a relevant_times collection which only contains store-times in between the menu-hours and discards all the redundant data.
+## Day zero has been hardcoded as start and end times for each day are assumed to be same. Cuts search by a factor of 6.
+
+
+
+
+
+
+
 
 # print(get_data())
 # def convert_timezone(x):
