@@ -63,14 +63,7 @@ def create_tmz_object(date, time):
     return utc_time
 
 
-@app.get("/func")
-def hello():
-    i=0
-    while i!=100:
-        return {"running"+f"{i}"}
-        i= i+1
-    return {"done"}
-@app.get("/test")
+@app.get("/generate_new_report")              #Fetches the most recent report Id generated and will use this ID for returning the CSV
 async def hello_program():
     report = client[config["DB_NAME"]]['report_Ids'].find_one(
         {},
@@ -81,8 +74,7 @@ async def hello_program():
 
 
 
-##Creating a relevant_times collection which only contains store-times in between the menu-hours and discards all the redundant data.
-## Day zero has been hardcoded as start and end times for each day are assumed to be same. Cuts search by a factor of 6.
+
 
 
 
