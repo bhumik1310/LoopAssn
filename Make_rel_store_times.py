@@ -1,5 +1,4 @@
 import pytz
-
 from pymongo import MongoClient
 
 from datetime import timezone,timedelta,datetime
