@@ -15,7 +15,7 @@ from datetime import timezone,timedelta,datetime
 #Should be ideally run centrally , sifts through the dynamic csv's to maintain a list free of irrelevant datatimes(which do not lie in
 #the menu hours , but still exist in store_times , and is redundant to run these operations everytime a report has to be generated.
 #A trigger can be bound to the end of the collection cursors to identify a modification in the store-time csv to rerun a part of this
-#to essentially sort the new element in.
+#to essentially sort the new element in(2).
 
 client = MongoClient("mongodb+srv://user:user@testdb.lz5fe4t.mongodb.net/?retryWrites=true&w=majority")
 db = client["LoopDB"]

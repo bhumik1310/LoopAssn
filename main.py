@@ -9,9 +9,6 @@ import random
 from threading import Timer
 config = dotenv_values(".env")
 
-from motor import motor_asyncio
-from motor import motor_common
-from motor import motor_gridfs
 
 
 
