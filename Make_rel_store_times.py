@@ -14,7 +14,7 @@ from datetime import timezone,timedelta,datetime
 #Should be ideally run centrally , sifts through the dynamic csv's to maintain a list free of irrelevant datatimes(which do not lie in
 #the menu hours , but still exist in store_times , and is redundant to run these operations everytime a report has to be generated.
 #A trigger can be bound to the end of the collection cursors to identify a modification in the store-time csv to rerun a part of this
-#to essentially sort the new element.(2)
+#to essentially sort the new element.
 
 client = MongoClient("mongodb+srv://user:user@testdb.lz5fe4t.mongodb.net/?retryWrites=true&w=majority")
 db = client["LoopDB"]
@@ -43,6 +43,8 @@ for x in client["LoopDB"]['Menu_hours'].find({"day":2}):
  #instances expire after 30 mins of usage, so if the failing cursor is known , the cursor time can be reset and the code will
  #keep on working.
  # print("running")
+
+
  utc_end=0
  utc_start=0
 
