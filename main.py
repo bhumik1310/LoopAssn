@@ -54,14 +54,6 @@ def shutdown_db_client():
     app.mongodb_client.close()
 
 
-def create_tmz_object(date, time):
-    time_format = "%Y-%m-%d %H:%M:%S"
-    tmz_string = date + time
-    naive_time = datetime.strptime(tmz_string, time_format)
-    local_time = local_tmz.localize(naive_time, is_dst=None)
-    utc_time = local_time.astimezone(pytz.utc)
-    return utc_time
-
 
 @app.get("/generate_new_report")              #Fetches the most recent report Id generated and will use this ID for returning the CSV
 async def hello_program():
@@ -83,54 +75,4 @@ async def hello_program():
 
 
 
-# print(get_data())
-# def convert_timezone(x):
-#  for y in client[config["DB_NAME"]]['TimeZone'].find({"store_id":x["store_id"]}):
-#      # print(y)
-    # tmz_info = y["timezone_str"]
-    # local_tmz = pytz.timezone(y["timezone_str"])
-    # time_str_start = + x["start_time_local"]
-    # time_str_end = x["end_time_local"]
-    # time_format = "%Y-%m-%d %H:%M:%S"
-    # naive_start_time = datetime.strptime(time_str_start,time_format)
-    # local_start_time = local_tmz.localize(naive_start_time,is_dst=None)
-    # utc_start_time=local_start_time.astimezone(pytz.utc)
-    # print(utc_start_time.strftime(time_format),x["start_time_local"] ,y["timezone_str"])
- #  print(x)
-##TEST
-# for x in client[config["DB_NAME"]]['Menu_hours'].find({"day":1}):             #As there are multiple days present for various ids with the same opening/closing hours , it is sufficient to take only one day's
-#  convert_timezone(x)
- # for y in client[config["DB_NAME"]]['store_times'].find({'store_id': x['store_id']}):
- #  time = y['timestamp_utc']
- #  print(time)
-
-# print(report_id)
-
-##  Timezone conversion function ##
-##Interpolation algo
-
-# def extrapolate_uptime_downtime(observations, business_hours):
-#     """
-#     :param observations: list of tuples containing observation time and status (up or down)
-#     :param business_hours: tuple containing start and end time of business hours
-#     :return: list of tuples containing time intervals and status (up or down)
-#     """
-#     start_time, end_time = business_hours
-#     extrapolated_data = []
-#     current_status = observations[0][1]
-#     current_start_time = start_time
-#     for observation in observations:
-#         observation_time, status = observation
-#         if status != current_status:
-#             extrapolated_data.append((current_start_time, observation_time, current_status))
-#             current_start_time = observation_time
-#             current_status = status
-#     extrapolated_data.append((current_start_time, end_time, current_status))
-#     return extrapolated_data
-# #
-# # Example usage:
-# observations = [('10:14', 'up'), ('11:15', 'down')]
-# business_hours = ('9:00', '12:00')
-# extrapolated_data = extrapolate_uptime_downtime(observations, business_hours)
-# print(extrapolated_data)
 
